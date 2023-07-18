@@ -6,7 +6,8 @@
 #include <string.h>
 using namespace std;
 
-#define n 4
+#define n 6
+
 
 bool bfs(int rGraph[n][n],int s, int t, int parent[]){
     bool visited[n];
@@ -36,7 +37,7 @@ bool bfs(int rGraph[n][n],int s, int t, int parent[]){
 }
 
 
-int fordFulkerson(int graph[n][n],int s,int t){
+int fordFulkerson(int graph[n][n],int s,int t,int &count){
     int u,v;
     int rGraph[n][n];
     for (u=0;u<n;u++){
@@ -51,11 +52,13 @@ int fordFulkerson(int graph[n][n],int s,int t){
         for(v = t; v!=s; v= parent[v]){
             u = parent[v];
             pathFlow = min(pathFlow,rGraph[u][v]);
+            count++;
         }
         for(v=t;v!=s;v=parent[v]){
             u=parent[v];
             rGraph[u][v] -= pathFlow;
             rGraph[v][u] += pathFlow;
+            count++;
         }
         maxFlow+=pathFlow;
     }
@@ -66,11 +69,31 @@ int fordFulkerson(int graph[n][n],int s,int t){
 int main()
 {
     int graph[n][n]
-		= { { 0, 3, 2, 0 },
-		    { 0, 0, 5, 2 },
-			{ 0, 0, 0, 3 },
-			{ 0, 0, 0, 0 }
-		  };
+		= {
+		    {0,1000000,1000000,0},
+		    {0,0,1,0},
+		    {0,0,0,0},
+		    {0,1000000,1000000,0}
+		};
+		
+		
+// 		{
+// 		    {0,10,0,8,0,0},
+// 		    {0,0,5,2,0,0},
+// 		    {0,0,0,0,0,7},
+// 		    {0,0,0,0,10,0},
+// 		    {0,0,8,0,0,10},
+// 		    {0,0,0,0,0,0}
+// 		};
+		
+		int count = 0;
+// 		   s  a  b  c  d  t
+// 		s
+// 		a
+// 		b
+// 		c
+// 		d
+// 		t
 		  
 		  /*
 		     s  a  b  t
@@ -80,6 +103,12 @@ int main()
 		  t
 		  */
 		  
+// 		  { { 0, 3, 2, 0 },
+// 		    { 0, 0, 5, 2 },
+// 			{ 0, 0, 0, 3 },
+// 			{ 0, 0, 0, 0 }
+// 		  };
+		  
 // 		  { { 0, 16, 13, 0, 0, 0 },
 // 		    { 0, 0, 10, 12, 0, 0 },
 // 			{ 0, 4, 0, 0, 14, 0 },
@@ -88,10 +117,8 @@ int main()
 // 			{ 0, 0, 0, 0, 0, 0 }
 //		  };
 
-	cout << "Max flow : "
-		<< fordFulkerson(graph, 0, 3);
-
+	cout << "Max flow : "<< fordFulkerson(graph, 0, 3,count);
+    cout << endl << count;
 	return 0;
     
-    return 0;
 }
