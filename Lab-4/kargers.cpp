@@ -1,169 +1,164 @@
+// Online C++ compiler to run C++ program online
+// This is one run of Karger's Min-Cut algorithm
+// You can do it 100n(n-1) times with logic of random edge selection for accurate answer
+// This code requires to enter (u,v) manually
 #include <bits/stdc++.h>
 using namespace std;
-
-class Karger
-{
-    int n;
-    vector<pair<int, int>> edges;
-    int min_cut = INT_MAX;
-    vector<vector<int>> graph;
-    vector<vector<int>> g;
-
-    void algo(int u, int v, int n)
-    {
-        vector<vector<int>> g1(n, vector<int>(n));
-        cout << "before" << endl;
-        for (int i = 0; i < n - 1; i++)
-        {
-            for (int j = 0; j < n - 1; j++)
-            {
-                cout << g1[i][j] << " ";
-            }
-            cout << endl;
-        }
-        // main algorithm
-        for (int i = 0; i < n - 1; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                int cnt = 0;
-                if (i == u and j == v)
-                {
-                    g1[i][j] = g1[j][i] = 0;
-                    // for (int k = 0; k < edges.size(); k++)
-                    // {
-                    //     if ((edges[k].first == i and edges[k].second == j) or (edges[k].first == j and edges[k].second == i))
-                    //     {
-
-                    //         edges.erase(edges.begin() + k);
-                    //         cout << "same : " << i << " " << j << endl;
-                    //     }
-                    // }
-                }
-                else if (i == u or i == v)
-                {
-                    if (g[u][j] > 0)
-                        cnt += g[u][j];
-                    if (g[v][j] > 0)
-                        cnt += g[v][j];
-                    g1[v][j] = g1[u][j] = cnt;
-                }
-                else if (j == u or j == v)
-                {
-                    if (g[u][i] > 0)
-                        cnt += g[u][i];
-                    if (g[v][i] > 0)
-                        cnt += g[v][i];
-                    g1[i][u] = g1[i][v] = cnt;
-                }
-                else
-                {
-                    g1[i][j] = g[i][j];
-                }
-            }
-        }
-
-        cout << "half\n";
-
-        // copy upper trianguler to lower one
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                if (i >= j)
-                {
-                    g1[i][j] = g1[j][i];
-                }
-            }
-        }
-        cout << "complete\n";
-        // removing vth row and column
-
-        g1.erase(g1.begin() + v);
-        cout << "complete\n";
-        for (int i = 0; i < n; i++)
-        {
-            g1[i].erase(g1[i].begin() + v);
-        }
-        cout << "after\n";
-        for (int i = 0; i < n - 1; i++)
-        {
-            for (int j = 0; j < n - 1; j++)
-            {
-                cout << g1[i][j] << " ";
-            }
-            cout << endl;
-        }
-
-        g = g1;
-    }
-
-public:
-    void readGraph()
-    {
-        cout << "Enter no of Nodes in graph : ";
-        cin >> n;
-        cout << "Enter no of edges in graph : ";
-        int edge;
-        cin >> edge;
-        vector<vector<int>> temp(n, vector<int>(n));
-        for (int i = 0; i < edge; i++)
-        {
-            int u, v;
-            cin >> u >> v;
-            edges.push_back({u, v});
-            temp[u][v] = 1;
-            temp[v][u] = 1;
-        }
-        graph = temp;
-    }
-
-    int run()
-    {
-        int n1 = n;
-        for (int i = 0; i < 1; i++)
-        {
-            g = graph;
-            while (n1 > 2)
-            {
-                int u, v;
-                // pair<int, int> p = edges[rand() % edges.size()];
-
-                while (1)
-                {
-                    u = rand() % n1;
-                    v = rand() % n1;
-                    if (g[u][v] == 1)
-                    {
-                        break;
-                    }
-                }
-
-                cout << "selected" << u << " " << v << endl;
-                algo(u, v, n1);
-                n1--;
-            }
-            min_cut = min(g[0][1], min_cut);
-        }
-        return min_cut;
-    }
-};
-
-/*
-0 1
-0 2
-0 3
-1 3
-2 3
-*/
+#define N 4
+int G[N][N] = {{0, 1, 1, 1}, {1, 0, 0, 1}, {1, 0, 0, 1}, {1, 1, 1, 0}};
+int G1[N][N];
 
 int main()
 {
-    srand(time(0));
+    // Write C++ code here
+    std::cout << "Hello world!";
 
-    Karger k;
+    int i, j;
+    int n = N;
+    while (n > 2)
+    {
+        int u, v;
+        cout << "Enter Edge:" << endl;
+        cout << "Enter U:" << endl;
+        cin >> u;
+        cout << "Enter V:" << endl;
+        cin >> v;
+        int cnt = 0;
+        for (i = 0; i < n; i++)
+        {
+            for (j = i + 1; j < n; j++)
+            {
+                cnt = 0;
+                if (i == u && j == v)
+                    G1[i][j] = G1[j][i] = 0;
+                else if (i == u || i == v)
+                {
+                    if (G[u][j] > 0)
+                    {
+                        cnt += G[u][j];
+                    }
+                    if (G[v][j] > 0)
+                    {
+                        cnt += G[v][j];
+                    }
+                    if (u < j)
+                    {
+                        G1[u][j] = cnt;
+                    }
+                    else
+                    {
+                        G1[j][u] = cnt;
+                    }
+                    if (v < j)
+                    {
+                        G1[v][j] = cnt;
+                    }
+                    else
+                    {
+                        G1[j][v] = cnt;
+                    }
+                    // G1[u][j]=G1[v][j]=cnt;
+                }
+                else if (j == u || j == v)
+                {
+                    if (G[u][i] > 0)
+                    {
+                        cnt += G[u][i];
+                    }
+                    if (G[v][i] > 0)
+                    {
+                        cnt += G[v][i];
+                    }
+                    if (i < u)
+                    {
+                        G1[i][u] = cnt;
+                    }
+                    else
+                    {
+                        G1[u][i] = cnt;
+                    }
+                    if (i < v)
+                    {
+                        G1[i][v] = cnt;
+                    }
+                    else
+                    {
+                        G1[v][i] = cnt;
+                    }
+                    // G1[i][u]=G1[i][v]=cnt;
+                }
+                else
+                {
+                    G1[i][j] = G[i][j];
+                }
+            }
+        }
+        for (i = 0; i < n; i++)
+        {
+            for (j = 0; j < n; j++)
+            {
+                cout << G1[i][j] << " ";
+            }
+            cout << endl;
+        }
+        for (i = 0; i < n; i++)
+        {
+            for (j = 0; j < n; j++)
+            {
+                if (i >= j)
+                {
+                    G1[i][j] = G1[j][i];
+                }
+            }
+        }
+        for (i = 0; i < n; i++)
+        {
+            for (j = 0; j < n; j++)
+            {
+                cout << G1[i][j] << " ";
+            }
+            cout << endl;
+        }
+        int x = n - 1;
+        int G2[x][x];
+        int a = 0, b = 0;
+        for (i = 0; i < n; i++)
+        {
+            if (i == v)
+                continue;
+            b = 0;
+            for (j = 0; j < n; j++)
+            {
+                if (j == v)
+                    continue;
+                else
+                // if(i!=v and j!=v)
+                {
+                    G2[a][b] = G1[i][j];
+                    b++;
+                }
+            }
+            a++;
+        }
+        for (i = 0; i < x; i++)
+        {
+            for (j = 0; j < x; j++)
+            {
+                cout << G2[i][j] << " ";
+            }
+            cout << endl;
+        }
+        for (i = 0; i < x; i++)
+        {
+            for (j = 0; j < x; j++)
+            {
+                G[i][j] = G2[i][j];
+            }
+        }
+        n = n - 1;
+    }
 
-    k.readGraph();
-    cout << k.run() << endl;
+    cout << "Min-Cut="
+         << " " << G[0][1];
     return 0;
 }
